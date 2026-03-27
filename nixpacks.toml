@@ -2,4 +2,4 @@
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm ci && npx tsc"]
+cmds = ["node node_modules/typescript/bin/tsc && ls -la dist/"]
