@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
 "build": "node node_modules/typescript/bin/tsc",
-"start": "node node_modules/tsx/dist/cli.mjs server/index.ts",
+"start": "node dist/server/index.js",
     "dev": "tsx server/index.ts",
     "check": "tsc",
     "db:push": "drizzle-kit push",
