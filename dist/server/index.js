@@ -48,6 +48,16 @@ const newsletter_1 = __importDefault(require("./routes/newsletter"));
 const newsletter_js_1 = require("./controllers/newsletter.js");
 const app = (0, express_1.default)();
 const httpServer = (0, http_1.createServer)(app);
+// CORS
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(200);
+    }
+    next();
+});
 app.use(express_1.default.json({
     verify: (req, _res, buf) => {
         req.rawBody = buf;
