@@ -3,3 +3,6 @@ NODE_VERSION = "20"
 
 [phases.install]
 cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["node node_modules/typescript/bin/tsc && node node_modules/.bin/drizzle-kit push"]
