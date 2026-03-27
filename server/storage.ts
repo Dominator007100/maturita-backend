@@ -36,63 +36,47 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByEmail(email: string): Promise<User | undefined> {
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const [user] = await db.select().from(users).where(eq(users.email, email));
     return user;
   }
 
-async createUser(insertUser: InsertUser): Promise<User> {
-  const [user] = await db
-    .insert(users)
-    .values({
-      email: insertUser.email,
-      passwordHash: insertUser.passwordHash,
-      role: insertUser.role ?? "admin",
-    })
-    .returning();
-  return user;
-}
-
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values({
+        email: insertUser.email,
+        passwordHash: insertUser.passwordHash,
+        role: insertUser.role ?? "admin",
+      } as any)
+      .returning();
+    return user;
+  }
 
   async createQuizSubmission(submission: InsertQuizSubmission): Promise<QuizSubmission> {
-    const [result] = await db.insert(quizSubmissions).values(submission).returning();
+    const [result] = await db.insert(quizSubmissions).values(submission as any).returning();
     return result;
   }
 
   async getQuizSubmission(id: string): Promise<QuizSubmission | undefined> {
-    const [result] = await db
-      .select()
-      .from(quizSubmissions)
-      .where(eq(quizSubmissions.id, id));
+    const [result] = await db.select().from(quizSubmissions).where(eq(quizSubmissions.id, id));
     return result;
   }
 
   async getQuizSubmissions(): Promise<QuizSubmission[]> {
-    return db
-      .select()
-      .from(quizSubmissions)
-      .orderBy(desc(quizSubmissions.submittedAt));
+    return db.select().from(quizSubmissions).orderBy(desc(quizSubmissions.submittedAt));
   }
 
   async getNewsArticles(): Promise<NewsArticle[]> {
-    return db
-      .select()
-      .from(newsArticles)
-      .orderBy(desc(newsArticles.publishedAt));
+    return db.select().from(newsArticles).orderBy(desc(newsArticles.publishedAt));
   }
 
   async getNewsArticleByUrl(url: string): Promise<NewsArticle | undefined> {
-    const [article] = await db
-      .select()
-      .from(newsArticles)
-      .where(eq(newsArticles.sourceUrl, url));
+    const [article] = await db.select().from(newsArticles).where(eq(newsArticles.sourceUrl, url));
     return article;
   }
 
   async createNewsArticle(article: InsertNewsArticle): Promise<NewsArticle> {
-    const [result] = await db.insert(newsArticles).values(article).returning();
+    const [result] = await db.insert(newsArticles).values(article as any).returning();
     return result;
   }
 

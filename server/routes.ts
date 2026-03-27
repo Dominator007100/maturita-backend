@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { type Server } from "http";
-import { authMiddleware } from "./middleware/authMiddleware";
+import { authMiddleware } from "./middleware/auth";
 import { storage } from "./storage";
 import {
   insertQuizSubmissionSchema,
@@ -15,7 +15,6 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
 
-  // Odeslání testu
   app.post("/api/quiz/submit", async (req, res) => {
     try {
       const parsed = insertQuizSubmissionSchema.parse(req.body);
@@ -26,7 +25,6 @@ export async function registerRoutes(
     }
   });
 
-  // Získání jedné submission
   app.get("/api/quiz/submissions/:id", async (req, res) => {
     try {
       const submission = await storage.getQuizSubmission(req.params.id);
@@ -39,7 +37,6 @@ export async function registerRoutes(
     }
   });
 
-  // Získání všech submissions
   app.get("/api/quiz/submissions", async (_req, res) => {
     try {
       const submissions = await storage.getQuizSubmissions();
@@ -49,7 +46,6 @@ export async function registerRoutes(
     }
   });
 
-  // Získání news
   app.get("/api/news", async (_req, res) => {
     try {
       const articles = await storage.getNewsArticles();
@@ -59,7 +55,6 @@ export async function registerRoutes(
     }
   });
 
-  // 🔥 CHRÁNĚNÝ ENDPOINT PRO TEST
   app.get("/api/quiz/start", authMiddleware, (req, res) => {
     res.json({ message: "Můžeš začít test" });
   });

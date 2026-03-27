@@ -8,11 +8,7 @@ import { createServer } from "http";
 import { startNewsCron } from "./newsCron";
 import newsletterRoutes from "./routes/newsletter";
 import { subscribe, unsubscribe } from "./controllers/newsletter.js";
-import authRoutes from "./routes/auth";
 
-// --------------------------------------------------
-// 1) EXPRESS APP – MUSÍ BÝT JEN JEDEN
-// --------------------------------------------------
 const app = express();
 const httpServer = createServer(app);
 
@@ -22,14 +18,6 @@ declare module "http" {
   }
 }
 
-// --------------------------------------------------
-// 2) AUTH ROUTES – musí být hned po vytvoření app
-// --------------------------------------------------
-
-
-// --------------------------------------------------
-// 3) RAW BODY PRO WEBHOOKY
-// --------------------------------------------------
 app.use(
   express.json({
     verify: (req, _res, buf) => {
@@ -37,12 +25,9 @@ app.use(
     },
   }),
 );
-app.use("/api", authRoutes);
+
 app.use(express.urlencoded({ extended: false }));
 
-// --------------------------------------------------
-// 4) LOGGING MIDDLEWARE
-// --------------------------------------------------
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -50,7 +35,6 @@ export function log(message: string, source = "express") {
     second: "2-digit",
     hour12: true,
   });
-
   console.log(`${formattedTime} [${source}] ${message}`);
 }
 
@@ -79,53 +63,31 @@ app.use((req, res, next) => {
   next();
 });
 
-// --------------------------------------------------
-// 5) NEWSLETTER API
-// --------------------------------------------------
 app.post("/api/subscribe", subscribe);
 app.post("/api/unsubscribe", unsubscribe);
 app.use("/api/newsletter", newsletterRoutes);
 
-// --------------------------------------------------
-// 4) SEED + ROUTES + ERROR HANDLER + STATIC + CRON
-// --------------------------------------------------
 (async () => {
   const { seedDatabase } = await import("./seed");
   await seedDatabase();
 
-  // API ROUTES
   await registerRoutes(httpServer, app);
 
-  // ERROR HANDLER
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     console.error("Internal Server Error:", err);
-
     if (res.headersSent) {
       return next(err);
     }
-
     return res.status(status).json({ message });
   });
 
-  // STATIC FILES
   serveStatic(app);
-
-  // CRON
   startNewsCron();
 
-  // SERVER START
   const port = parseInt(process.env.PORT || "3000", 10);
-
-  httpServer.listen(
-    {
-      port,
-      host: "0.0.0.0",
-    },
-    () => {
-      log(`serving on port ${port}`);
-    }
-  );
+  httpServer.listen({ port, host: "0.0.0.0" }, () => {
+    log(`serving on port ${port}`);
+  });
 })();

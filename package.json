@@ -13,22 +13,23 @@
     "fetch:all": "npm run fetch:csirt && npm run fetch:nukib && npm run fetch:enisa"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
     "cheerio": "^1.2.0",
     "connect-pg-simple": "^10.0.0",
     "dotenv": "^17.3.1",
-    "drizzle-orm": "^0.39.3",
-    "drizzle-zod": "^0.7.0",
+    "drizzle-orm": "^0.36.4",
+    "drizzle-zod": "^0.5.1",
     "express": "^4.18.2",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.3",
     "node-cron": "^4.2.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.16.3",
+    "pg": "^8.20.0",
     "ws": "^8.18.0",
-    "zod": "^3.24.2"
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/express": "^4.17.21",
@@ -38,7 +39,7 @@
     "@types/passport": "^1.0.16",
     "@types/passport-local": "^1.0.38",
     "@types/ws": "^8.5.13",
-    "drizzle-kit": "^0.31.8",
+    "drizzle-kit": "^0.24.2",
     "tsx": "^4.21.0",
     "typescript": "5.6.3"
   }
