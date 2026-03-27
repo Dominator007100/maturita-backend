@@ -12,15 +12,10 @@ import { subscribe, unsubscribe } from "./controllers/newsletter";
 
 const app = express();
 app.use(cors());
-app.use(
-  express.json({
-    verify: (req, _res, buf) => {
-      req.rawBody = buf;
-    },
-  }),
-);
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 app.use(express.urlencoded({ extended: false }));
 app.use("/api", authRoutes);
+
 const httpServer = createServer(app);
 
 declare module "http" {
