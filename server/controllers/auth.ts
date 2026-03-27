@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import { db } from "../../shared/db";
 import { users } from "../../shared/schema";
 import { eq } from "drizzle-orm";
