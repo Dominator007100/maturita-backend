@@ -1,7 +1,7 @@
 import cron from "node-cron";
-import { fetchNukibNews } from "./newsFetcher.ts";
-import { fetchCsirtNews } from "./newsFetcherCSIRT.ts";
-import { fetchEnisaNews } from "./newsFetcherENISA.ts";
+import { fetchNukibNews } from "./newsFetcher";
+import { fetchCsirtNews } from "./newsFetcherCSIRT";
+import { fetchEnisaNews } from "./newsFetcherENISA";
 
 
 export function startNewsCron() {
