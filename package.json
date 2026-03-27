@@ -2,7 +2,7 @@
   "name": "rest-express",
   "version": "1.0.0",
   "scripts": {
-    "build": "node node_modules/typescript/bin/tsc && mkdir -p dist/server/routes && mkdir -p dist/server/controllers && cp server/routes/newsletter.js dist/server/routes/ && cp server/controllers/newsletter.js dist/server/controllers/",
+    "build": "node node_modules/typescript/bin/tsc && mkdir -p dist/server/routes && mkdir -p dist/server/controllers && cp server/routes/newsletter.js dist/server/routes/ && cp server/controllers/newsletter.js dist/server/controllers/", 
     "start": "node dist/server/index.js",
     "dev": "tsx server/index.ts",
     "check": "tsc",
