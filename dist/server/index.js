@@ -38,6 +38,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = log;
 const auth_1 = __importDefault(require("./routes/auth"));
+const cors_1 = __importDefault(require("cors"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
@@ -46,31 +47,16 @@ const static_1 = require("./static");
 const http_1 = require("http");
 const newsCron_1 = require("./newsCron");
 const newsletter_1 = __importDefault(require("./routes/newsletter"));
-const newsletter_js_1 = require("./controllers/newsletter.js");
+const newsletter_2 = require("./controllers/newsletter");
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use("/api", auth_1.default);
 const httpServer = (0, http_1.createServer)(app);
-// CORS
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(200);
-    }
-    next();
-});
-app.use(express_1.default.json({
-    verify: (req, _res, buf) => {
-        req.rawBody = buf;
-    },
-}));
+app.use(express_1.default.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 app.use(express_1.default.urlencoded({ extended: false }));
 function log(message, source = "express") {
     const formattedTime = new Date().toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
+        hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true,
     });
     console.log(`${formattedTime} [${source}] ${message}`);
 }
@@ -87,17 +73,15 @@ app.use((req, res, next) => {
         const duration = Date.now() - start;
         if (path.startsWith("/api")) {
             let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-            if (capturedJsonResponse) {
+            if (capturedJsonResponse)
                 logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-            }
             log(logLine);
         }
     });
     next();
 });
-app.post("/api/subscribe", newsletter_js_1.subscribe);
-app.post("/api/unsubscribe", newsletter_js_1.unsubscribe);
-app.use("/api", auth_1.default);
+app.post("/api/subscribe", newsletter_2.subscribe);
+app.post("/api/unsubscribe", newsletter_2.unsubscribe);
 app.use("/api/newsletter", newsletter_1.default);
 (async () => {
     const { seedDatabase } = await Promise.resolve().then(() => __importStar(require("./seed")));
@@ -107,15 +91,12 @@ app.use("/api/newsletter", newsletter_1.default);
         const status = err.status || err.statusCode || 500;
         const message = err.message || "Internal Server Error";
         console.error("Internal Server Error:", err);
-        if (res.headersSent) {
+        if (res.headersSent)
             return next(err);
-        }
         return res.status(status).json({ message });
     });
     (0, static_1.serveStatic)(app);
     (0, newsCron_1.startNewsCron)();
     const port = parseInt(process.env.PORT || "3000", 10);
-    httpServer.listen({ port, host: "0.0.0.0" }, () => {
-        log(`serving on port ${port}`);
-    });
+    httpServer.listen({ port, host: "0.0.0.0" }, () => { log(`serving on port ${port}`); });
 })();
