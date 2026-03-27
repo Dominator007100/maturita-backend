@@ -2,4 +2,4 @@
 cmds = ["npm ci"]
 
 [phases.build]
-cmds = ["npm run build"]
+cmds = ["npm ci && npx tsc"]
