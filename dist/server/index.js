@@ -37,6 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.log = log;
+const auth_1 = __importDefault(require("./routes/auth"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
@@ -96,6 +97,7 @@ app.use((req, res, next) => {
 });
 app.post("/api/subscribe", newsletter_js_1.subscribe);
 app.post("/api/unsubscribe", newsletter_js_1.unsubscribe);
+app.use("/api", auth_1.default);
 app.use("/api/newsletter", newsletter_1.default);
 (async () => {
     const { seedDatabase } = await Promise.resolve().then(() => __importStar(require("./seed")));

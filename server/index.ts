@@ -1,3 +1,4 @@
+import authRoutes from "./routes/auth";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -76,6 +77,7 @@ app.use((req, res, next) => {
 
 app.post("/api/subscribe", subscribe);
 app.post("/api/unsubscribe", unsubscribe);
+app.use("/api", authRoutes);
 app.use("/api/newsletter", newsletterRoutes);
 
 (async () => {
