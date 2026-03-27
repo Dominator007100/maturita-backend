@@ -1,2 +1,10 @@
 [phases.install]
 cmds = ["npm ci"]
+
+[variables]
+NODE_VERSION = "20"
+```
+
+Also in Railway Settings → **Variables**, add:
+```
+NODE_VERSION = 20
