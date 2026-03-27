@@ -2,7 +2,7 @@
   "name": "rest-express",
   "version": "1.0.0",
   "scripts": {
-    "build": "node node_modules/typescript/bin/tsc && node node_modules/.bin/drizzle-kit push",
+    "build": "node node_modules/typescript/bin/tsc",
     "start": "node dist/server/index.js",
     "dev": "tsx server/index.ts",
     "check": "tsc",
